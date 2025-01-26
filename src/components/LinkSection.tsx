@@ -5,6 +5,7 @@ interface Link {
   title: string;
   url: string;
   type: "default" | "store";
+  customColor?: string;
 }
 
 interface LinkSectionProps {
@@ -18,7 +19,12 @@ export const LinkSection = ({ title, links }: LinkSectionProps) => {
       <h2 className="text-white/80 text-sm font-medium mb-3">{title}</h2>
       <div className="space-y-3">
         {links.map((link) => (
-          <LinkButton key={link.id} href={link.url} variant={link.type}>
+          <LinkButton 
+            key={link.id} 
+            href={link.url} 
+            variant={link.type}
+            customColor={link.customColor}
+          >
             {link.title}
           </LinkButton>
         ))}

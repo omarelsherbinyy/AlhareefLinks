@@ -36,5 +36,5 @@ export default defineConfig(({ mode }) => ({
       },
     } : undefined,
   },
-  base: '/', // This ensures proper routing in both dev and prod
+  base: '/',
 }));

@@ -1,14 +1,13 @@
 import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 
 export const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const [session, setSession] = useState<boolean | null>(null);
   const { toast } = useToast();
 
   useEffect(() => {
-    // Initial session check
     const checkSession = async () => {
       try {
         const { data: { session: currentSession }, error } = await supabase.auth.getSession();
@@ -33,7 +32,6 @@ export const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
 
     checkSession();
 
-    // Listen for auth changes
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (event, currentSession) => {
@@ -54,7 +52,6 @@ export const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
     };
   }, [toast]);
 
-  // Show loading state while checking session
   if (session === null) {
     return (
       <div className="min-h-screen bg-[#1D1B1C] flex items-center justify-center">
@@ -63,7 +60,6 @@ export const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
     );
   }
 
-  // Redirect to login if not authenticated
   if (!session) {
     return <Navigate to="/auth" replace />;
   }

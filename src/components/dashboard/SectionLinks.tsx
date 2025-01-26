@@ -3,19 +3,22 @@ import { Input } from "@/components/ui/input";
 import { Edit2, Eye, EyeOff, Save, Trash2, X } from "lucide-react";
 import type { Database } from "@/integrations/supabase/types";
 import { useToast } from "@/hooks/use-toast";
+import { HexColorPicker } from "react-colorful";
+import { useState } from "react";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 type Link = Database["public"]["Tables"]["links"]["Row"];
 
 interface SectionLinksProps {
   link: Link;
   editingLink: string | null;
-  tempLinkData: { name: string; url: string };
+  tempLinkData: { name: string; url: string; custom_color?: string };
   onUpdateLink: (linkId: string, updates: any) => Promise<void>;
   onToggleLinkVisibility: (linkId: string, currentVisibility: boolean) => Promise<void>;
   onDeleteLink: (linkId: string) => Promise<void>;
-  onEditLink: (linkId: string, name: string, url: string) => void;
+  onEditLink: (linkId: string, name: string, url: string, custom_color?: string) => void;
   onCancelEdit: () => void;
-  onTempLinkDataChange: (data: { name: string; url: string }) => void;
+  onTempLinkDataChange: (data: { name: string; url: string; custom_color?: string }) => void;
 }
 
 export const SectionLinks = ({
@@ -30,11 +33,12 @@ export const SectionLinks = ({
   onTempLinkDataChange,
 }: SectionLinksProps) => {
   const { toast } = useToast();
+  const [color, setColor] = useState(link.custom_color || "#F97316");
 
   const handleSave = async () => {
     try {
-      await onUpdateLink(link.id, tempLinkData);
-      onCancelEdit(); // Close edit mode after successful save
+      await onUpdateLink(link.id, { ...tempLinkData, custom_color: color });
+      onCancelEdit();
       toast({
         title: "Success",
         description: "Link updated successfully",
@@ -68,6 +72,20 @@ export const SectionLinks = ({
             placeholder="URL"
             className="w-full bg-white text-black"
           />
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                variant="outline"
+                className="w-[100px] h-[35px]"
+                style={{ backgroundColor: color }}
+              >
+                <span className="sr-only">Pick a color</span>
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-3">
+              <HexColorPicker color={color} onChange={setColor} />
+            </PopoverContent>
+          </Popover>
           <div className="flex gap-2 w-full sm:w-auto">
             <Button
               variant="outline"
@@ -110,7 +128,8 @@ export const SectionLinks = ({
               variant="outline"
               size="sm"
               onClick={() => {
-                onEditLink(link.id, link.name, link.url);
+                onEditLink(link.id, link.name, link.url, link.custom_color);
+                setColor(link.custom_color || "#F97316");
               }}
               className="flex-1 sm:flex-none bg-white text-black border-black"
             >

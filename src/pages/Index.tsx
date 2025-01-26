@@ -4,7 +4,6 @@ import { SocialLinks } from "@/components/SocialLinks";
 import { supabase } from "@/integrations/supabase/client";
 import type { Database } from "@/integrations/supabase/types";
 
-// Brand configuration
 const DEFAULT_BRAND_NAME = "Alhareef";
 const BRAND_LOGO_URL = "/logo.png";
 
@@ -137,6 +136,7 @@ const Index = () => {
                 title: link.name,
                 url: link.url,
                 type: link.button_template === "none" ? "default" : "store",
+                customColor: link.custom_color || undefined,
               }))}
           />
         ))}
