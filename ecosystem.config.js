@@ -4,7 +4,7 @@ module.exports = {
     script: "npm",
     args: "run preview",
     env: {
-      PORT: 3008,
+      PORT: 3004,
       NODE_ENV: "production"
     },
     instances: 1,
