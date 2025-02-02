@@ -1,6 +1,6 @@
 module.exports = {
   apps: [{
-    name: "alhareef-links",
+    name: "links",
     script: "npm",
     args: "run preview",
     env: {
